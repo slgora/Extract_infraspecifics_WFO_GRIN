@@ -23,7 +23,7 @@ Output
 - infraspecifics_verified.xlsx — one row per infraspecific with columns:
   - input_species — queried species name
   - infraspecific_name — each verified infraspecific name (one per row)
-  - source — provenance: "WFO", "GRIN", "WFO, GRIN" (both), "OUTLINK", or "NONE"
+  - source — provenance: "WFO", "GRIN", "WFO, GRIN" (both)
 
 Source & cache
 - Per-name source checks use the verifier and are cached to: verifier_provenance_cache.rds
