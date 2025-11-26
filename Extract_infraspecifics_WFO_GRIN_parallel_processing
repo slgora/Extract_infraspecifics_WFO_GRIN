@@ -1,52 +1,45 @@
-# End-to-end pipeline (Parallelized Version for quicker processing of large datasets)
 # Extract infraspecific taxon names from World Flora Online and GRIN-Global
-#
-# Notes:
+# End-to-end pipeline (Parallelized Version for quicker processing of large datasets)
+
+# Notes on parallelized version:
 # - This version is optimized for performance using parallel processing.
 # - It includes thread-safe caching and corrected logic for data handling.
 # - Fallback scan of combined resolver results to reduce OUTLINK fallbacks
 # - Produces one Excel file: infraspecifics_verified.xlsx
 
-# ---- dependencies ----
-required_pkgs <- c("httr", "jsonlite", "stringr", "dplyr", "tidyr", "rvest", "xml2", "readr", "writexl", "tibble", "future", "furrr", "flock", "data.table")
-for (p in required_pkgs) if (!requireNamespace(p, quietly = TRUE)) install.packages(p)
-library(httr)
-library(jsonlite)
-library(stringr)
-library(dplyr)
-library(tidyr)
-library(rvest)
-library(xml2)
-library(readr)
-library(writexl)
-library(tibble)
-library(future)
-library(furrr)
-library(flock)
-library(data.table)
+# Usage:
+# - Functions are available in environment or sourced within script below.
+# - Adjust plant_list, num_workers, delays, and other config as needed.
 
-# ---- source helper modules (adjust paths if needed) ----
-# Ensure these helper scripts are in a 'Functions/' and 'Tools/' directory
-# or adjust the paths accordingly.
+# ---- load libraries ----
+required_pkgs <- c("httr", "jsonlite", "stringr", "dplyr", "tidyr", "rvest", "xml2",
+                   "readr", "writexl", "tibble", "future", "furrr", "flock", "data.table")
+for (p in required_pkgs) if (!requireNamespace(p, quietly = TRUE)) install.packages(p)
+library(httr); library(jsonlite); library(stringr); library(dplyr); library(tidyr)
+library(rvest); library(xml2); library(readr); library(writexl); library(tibble)
+library(future); library(furrr); library(flock); library(data.table)
+
+# ---- source functions (adjust paths as needed) ----
+# Make sure functions are in a 'Functions/' and 'Tools/' directory
+# or source within-script below
 source('Functions/Query_taxa_resolver.R')
 source('Functions/Process_taxa_resolver_results.R')
 source('Functions/parse_wfo_json_infraspecifics.R')
 source('Functions/fetch_outlink_infraspecifics.R')
 source('Tools/clean_outlink_tokens.R')
 
-# ---- configuration ----
-# Read in file with full list of species
+# ---- data read in and configuration ----
+# Read in file with list of species
 plant_list <- read_csv("my_species_list.csv")  # example file read in
 
-# extract species list
-species_list <- unique(trimws(na.omit(plant_list$species_name_field))) # example spcies field name extract
-
-sources <- list(WFO = '196', GRIN = '6') # adjust as needed
-query_delay <- 0.12   # adjust as needed
-outlink_delay <- 0.18  # adjust as needed
+# extract species list, define taxonomic source, set query delay time
+species_list <- unique(trimws(na.omit(plant_list$species_name_field))) # example species name field extract
+sources <- list(WFO = '196', GRIN = '6') # adjust taxonomic source as needed
+query_delay <- 0.12   # adjust delay time as needed
+outlink_delay <- 0.18  # adjust delay time as needed
 
 # ---- parallel setup ----
-num_workers <- 2         # adjust as needed
+num_workers <- 2   # adjust number of parallel workers as needed
 plan(multisession, workers = num_workers)
 
 # ---- provenance cache (deterministic path and lock) ----
@@ -496,11 +489,11 @@ if (nrow(all_long_results) > 0) {
   message("No infraspecific names were successfully verified.")
 }
 
-# ---- optional: helper to clear provenance cache (use for multiple runs) ----
+# ---- optional: helper to clear provenance cache (use for rebuild if batching) ----
 clear_prov_cache <- function() {
   rm(list = ls(envir = prov_cache), envir = prov_cache)
   if (file.exists(prov_cache_file)) file.remove(prov_cache_file)
   message("Cleared prov_cache and on-disk cache file.")
 }
 
-##### end script ######
+##### end script #####
