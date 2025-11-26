@@ -3,8 +3,10 @@
 What it does
 - Queries the Global Names Verifier (WFO + GRIN), follows verifier outlinks, extracts infraspecific names from WFO/HTML pages, cleans and re-verifies candidates, and produces a slim long table of verified infraspecific names with source attribution.
 
-Required files
-- scripts/compile_reverify_infraspecifics_full_with_write.R  — main pipeline
+Required scripts
+- Extract_infraspecifics_WFO_GRIN.R (simple extraction main pipeline script)
+  OR
+- Extract_infraspecifics_WFO_GRIN_parallel_processing.R (large dataset processing extraction main pipeline script)
 - Functions/Query_taxa_resolver.R
 - Functions/Process_taxa_resolver_results.R
 - Functions/parse_wfo_json_infraspecifics.R
@@ -16,7 +18,7 @@ Dependencies
 - Install in R: install.packages(c("httr","jsonlite","stringr","dplyr","tidyr","readr","writexl","tibble"))
 
 Configuration (quick)
-- Edit species_list inside scripts/compile_reverify_infraspecifics_full_with_write.R to set target species.
+- Edit species_list in main pipeline to set target species.
 - Adjust query_delay and outlink_delay in the script to be polite to APIs.
 
 Output
