@@ -1,4 +1,4 @@
-# Infraspecifics pipeline — README
+# Infraspecifics Extraction pipeline — README
 
 What it does
 - Queries the Global Names Verifier (WFO + GRIN), follows verifier outlinks, extracts infraspecific names from WFO/HTML pages, cleans and re-verifies candidates, and produces a slim long table of verified infraspecific names with source attribution.
