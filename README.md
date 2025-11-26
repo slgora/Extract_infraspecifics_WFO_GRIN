@@ -5,7 +5,7 @@ What it does
 
 Required scripts
 - Extract_infraspecifics_WFO_GRIN.R (simple extraction main pipeline script)
-  OR
+- OR
 - Extract_infraspecifics_WFO_GRIN_parallel_processing.R (large dataset processing extraction main pipeline script)
 - Functions/Query_taxa_resolver.R
 - Functions/Process_taxa_resolver_results.R
